@@ -76,6 +76,23 @@ bool RoboFDM::plane_cut(py::array_t<double>& input)
 	return true;
 }
 
+bool RoboFDM::plane_cut_both(py::array_t<double>& input)
+{
+	auto* data = input.data();
+	Plane pl;
+	if (input.size() == 3) {
+		pl = MeshCutEval::convert_abg_to_plane(data[0], data[1], data[2], bsphere);
+	}
+	else {
+		pl = Plane(data[0], data[1], data[2], data[3]);
+	}
+
+	poly_pos.clear();
+	PlaneCutter pc;
+	pc.cut_and_fill_both<FillHoleCDT>(poly, poly_pos, pl);
+	return true;
+}
+
 py::array_t<double> RoboFDM::planes()
 {
 	const auto dim = 3;
@@ -256,6 +273,13 @@ std::string RoboFDM::get_poly()
 {
 	std::stringstream ss;
 	ss << poly;
+	return ss.str();
+}
+
+std::string RoboFDM::get_positive_poly()
+{
+	std::stringstream ss;
+	ss << poly_pos;
 	return ss.str();
 }
 

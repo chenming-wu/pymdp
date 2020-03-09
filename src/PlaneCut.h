@@ -23,6 +23,17 @@ public:
 		return res;
 	}
 
+	template<typename FH>
+	bool cut_and_fill_both(Polyhedron& poly_left, Polyhedron& poly_right, const Plane& pl) {
+		bool res = cut(poly_left, poly_right, pl);
+		if (!res) return res;
+		Vector3 planeDir(pl.a(), pl.b(), pl.c());
+		FH fh;
+		fh.fill_hole(poly_left, planeDir);
+		fh.fill_hole(poly_right, -planeDir);
+		return res;
+	}
+
 	// Approach 2: this won't affect original polyhedron
 	std::pair<Polyhedron, Polyhedron> cut(const Polyhedron& poly, const Plane& pl);
 

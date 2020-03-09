@@ -30,11 +30,12 @@ Demo
 .. code-block:: python
 
     from pymdp import BGS
-
-    proc = BGS(filename='kitten.off')
-    proc.set_beam_width(10)
-    proc.set_output_folder('kitten')
-    proc.start_search()
+    
+    if __name__ == "__main__":
+        proc = BGS(filename='kitten.off')
+        proc.set_beam_width(10)
+        proc.set_output_folder('kitten')
+        proc.start_search()
 
 
 -------

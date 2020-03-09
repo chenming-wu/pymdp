@@ -19,7 +19,9 @@ PYBIND11_MODULE(RoboFDM, m) {
 		.def("get_risky_area", &RoboFDM::get_risky_area)
 		.def("get_area", &RoboFDM::get_area)
 		.def("get_volume", &RoboFDM::get_volume)
-		.def("get_far_risky_area", &RoboFDM::get_far_risky_area);
+		.def("get_far_risky_area", &RoboFDM::get_far_risky_area)
+		.def("plane_cut_both", &RoboFDM::plane_cut_both)
+		.def("get_positive_poly", &RoboFDM::get_positive_poly);
 }
 
 bool RoboFDM::mesh_to_polyhedron(const Eigen::MatrixXd& V, const Eigen::MatrixXi& F, Polyhedron& poly) {

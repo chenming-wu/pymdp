@@ -36,9 +36,13 @@ public:
 
     std::string get_poly();
 
+    std::string get_positive_poly();
+
     bool set_poly(const std::string& str);
 
     bool plane_cut(py::array_t<double>& input);
+
+    bool plane_cut_both(py::array_t<double>& input);
 
     py::array_t<double> planes();
 
@@ -58,7 +62,7 @@ private:
     static void load_candidate_dirs(std::vector<Vector3>& candidate_dirs_);
 
 public:
-    Polyhedron poly;
+    Polyhedron poly, poly_pos;
     std::vector<double> initResults;
     
     MinSphere bsphere;
@@ -77,7 +81,7 @@ private:
     const int Na = 64, Nb = 16, Nc = 64;
     const int N2 = Na * Nb;
     const int N3 = N2 * Nc;
-	const int nThread = 48;
+	const int nThread = 4;
     std::pair<double, double> rPlatform = std::make_pair(20, 0);
 	bool newLoaded_;
 };
