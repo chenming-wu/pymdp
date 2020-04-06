@@ -1,23 +1,40 @@
 import RoboFDM
 import numpy as np
 import copy
-import os, sys
+import os
+import sys
 from .utility import run_cut_process, write_mesh
 from .trajectory import TrajStation, Trajectory
 
+from sys import platform
+if platform == "linux" or platform == "linux2":
+    pass
+elif platform == "darwin":
+    pass
+elif platform == "win32":
+    import ctypes
+    SEM_NOGPFAULTERRORBOX = 0x8007
+    ctypes.windll.kernel32.SetErrorMode(SEM_NOGPFAULTERRORBOX)
+
+
 class BGS:
-    def __init__(self, filename, ranknet=None, export=True):
-        self.b_trajs = TrajStation()
-        self.filename = filename
-        self.env = RoboFDM.init()
-        self.env.reset(filename)
+    def __init__(self, filename, ranknet=None, export=False):
+        self.b_objs = []
         self.b_polys = []
         self.b_poly_sequence = []
         self.b_r_sequence = []
         self.b_rew = []
         self.b_residual = []
+        self.b_envs = []
         self.b_round = 0
         self.b_best_so_far = 0
+        self.b_trajs = TrajStation()
+        self.filename = filename
+        self.env = RoboFDM.init()
+        self.env.reset(filename)
+        self.params = np.array([0.05, 0.55, 0.0, 0.00, 0.25])
+        self.threshold = 0.02
+        self.n_features = self.env.n_features()
         self.output_folder = None
         self.b_width = None
         self.export_polys = []
@@ -55,8 +72,9 @@ class BGS:
         all_r = None
         all_range = []
         self.b_best_so_far = np.max(self.b_rew)
-        # print('best so far ' , self.b_best_so_far)
-        # print("polys = ", len(self.b_polys))
+        print('best so far ', self.b_best_so_far)
+        print("polys = ", len(self.b_polys))
+        print('residual = ', self.b_residual)
         for i in range(len(self.b_polys)):
             self.env.set_poly(self.b_polys[i])
             r = self.env.render()
@@ -65,6 +83,7 @@ class BGS:
             #r[:, 1] -=  r[:, 4]
             dr = r[:, 1]
             r[:, 1] += self.b_rew[i]
+            r[:, 4] += self.b_residual[i]
             all_range.append(len(dr))
             if all_r is None:
                 all_r = r
@@ -86,6 +105,7 @@ class BGS:
         self.b_poly_sequence.clear()
         self.b_r_sequence.clear()
         self.b_rew.clear()
+        self.b_residual.clear()
 
         # self.b_trajs.display()
         self.b_trajs.move_to_next_level()
@@ -128,11 +148,12 @@ class BGS:
 
                 #print('epsilon = ', all_r[cur_idx, -1], epsilon)
 
-                print('current feature = ', cur_idx, all_r[cur_idx, 0:5])
+                # print('current feature = ', cur_idx, all_r[cur_idx, 0:5])
 
                 ret_poly = run_cut_process(
                     self.b_polys[poly_idx], cur_plane, self.export)
                 if ret_poly == None:
+                    print('plane cut failed.')
                     continue
 
                 if type(ret_poly) == tuple:
@@ -142,10 +163,10 @@ class BGS:
                 cur_sel.append(i)
                 new_reward = all_r[cur_idx, 1]
                 self.b_rew.append(new_reward)
-
+                self.b_residual.append(all_r[cur_idx, 4])
                 if new_reward > self.b_best_so_far:
                     has_impr = True
-                print(all_r[cur_idx, :])
+                #print(all_r[cur_idx, :])
                 cur_poly_sequence = poly_sequence[poly_idx]
                 cur_poly_sequence.append(ret_poly)
                 self.b_poly_sequence.append(cur_poly_sequence)
@@ -159,7 +180,7 @@ class BGS:
                 #write_mesh(ret_poly, str(self.b_round) + '-' + str(poly_idx) + '-' + str(len(cur_polys)-1) +'.OFF')
 
                 # create/maintain a trajectory
-                traj_feats.append(all_r[cur_idx, 0:6])
+                traj_feats.append(all_r[cur_idx])
                 cur_traj_node.append((poly_idx, len(traj_feats)-1, new_reward))
                 #self.b_trajs.add_node(poly_idx, len(traj_feats)-1, new_reward)
 
@@ -178,43 +199,13 @@ class BGS:
         # while loop here
         if has_impr is False:
             return False
-        print('has improve')
+
         for tn in cur_traj_node:
             (pid, pl, pr) = tn
             self.b_trajs.add_node(pid, pl, pr)
 
         # print(cur_r)
         feat_valid = len(traj_feats)
-        # add more features to the trajectory
-        for i in range(len(all_r)):
-            cur_idx = area_sorted[i]
-            if all_r[cur_idx, 1] < 1e-4:
-                break
-
-            poly_idx = self.query_poly_idx(all_range, cur_idx)
-
-            # diversity
-            cur_plane = all_r[cur_idx, 6::]
-            flag_satisfied = True
-            for tmp_r in cur_r:
-                r, pid = tmp_r
-                if pid != poly_idx:  # don't filter if they come from different poly idx
-                    continue
-                if self.is_diverse(r[6::], cur_plane) is False:
-                    flag_satisfied = False
-                    break
-                # tmp_dist = self.r_distance(r[5::], cur_plane)
-                # if tmp_dist < self.threshold:
-                #     flag_satisfied = False
-                #     break
-
-            if not flag_satisfied:
-                #print("adding more features failed")
-                continue
-            #print("adding more features")
-
-            cur_r.append((all_r[cur_idx, :], poly_idx))
-            traj_feats.append(all_r[cur_idx, 0:6])
 
         self.b_trajs.add_feature(traj_feats, feat_valid)
 
@@ -223,10 +214,12 @@ class BGS:
         return True
 
     def start_search(self):
+        self.b_envs.append(self.env)
         self.b_polys.append(self.env.get_poly())
         self.b_poly_sequence.append(self.b_polys)
         self.b_r_sequence.append([0.0])
         self.b_rew.append(0.0)
+        self.b_residual.append(0.0)
         print(self.filename)
         while True:
             pos_rew = self.feedforward_search()
@@ -241,8 +234,3 @@ class BGS:
         if self.export:
             self.b_trajs.export_best_segmentation(os.path.join(
                 self.output_folder, os.path.basename(self.filename)[:-4]), self.export_polys)
-
-
-if __name__ == "__main__":
-    proc = BGS(filename='kitten.off')
-    proc.start_search()

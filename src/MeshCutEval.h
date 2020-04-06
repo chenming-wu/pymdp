@@ -10,7 +10,6 @@
 #include "GeometryTools.h"
 
 constexpr double alpha_max_ = 0.70711;
-constexpr double allowed_y = -2;
 constexpr double FRAGILE_EPS = 0.9;
 constexpr double CONNECT_EPS = 1;
 

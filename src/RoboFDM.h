@@ -1,8 +1,8 @@
 #pragma once
 
 #include <pybind11/pybind11.h>
-#include<pybind11/numpy.h>
-
+#include <pybind11/numpy.h>
+#include <omp.h>
 #include "MeshCutEval.h"
 
 namespace py = pybind11;
@@ -81,7 +81,7 @@ private:
     const int Na = 64, Nb = 16, Nc = 64;
     const int N2 = Na * Nb;
     const int N3 = N2 * Nc;
-	const int nThread = 4;
+	const int nThread = omp_get_num_procs();
     std::pair<double, double> rPlatform = std::make_pair(20, 0);
 	bool newLoaded_;
 };

@@ -1,6 +1,22 @@
 import copy
 import numpy as np
 import os
+from xml.etree.ElementTree import ElementTree
+from xml.etree.ElementTree import Element, SubElement
+
+def export_config_xml(file, planes):
+    root_node = Element('root')
+    tree = ElementTree(root_node)
+    # n_planes = len(planes) - 1
+
+    for i in range(len(planes)):
+        part_dict =  { "File":"result-"+str(i)+".off", "Space":"1"}
+        part_node = SubElement(root_node, 'Part', part_dict)
+        plane_node = SubElement(part_node, 'Planes')
+        plane = planes[i]
+        plane_node.text = '%f %f %f %f\n' % (plane[0], plane[1], plane[2], plane[3])
+
+    tree.write(file)
 
 class Trajectory:
     def __init__(self):
@@ -74,13 +90,13 @@ class TrajStation:
             adjacent_matrices.append(np.zeros((self.feat_valid[i], self.feat_valid[i]), dtype=bool))
         
         for traj in all_trajs:
-            print("score = ", str(traj.value))
+            # print("score = ", str(traj.value))
             for i in range(len(traj.nodes)):
                 k = traj.nodes[i]
                 m = adjacent_matrices[i]
                 m[k, :] = True
                 m[:, k] = False
-                print(i, k)
+                # print(i, k)
 
         if len(adjacent_matrices) == 0:
             return
@@ -100,18 +116,22 @@ class TrajStation:
         all_trajs = [x for sublist in self.trajs for x in sublist]
         best_traj = max(all_trajs, key=lambda x : x.value)
         print('val: ', best_traj.value)
-        
+        planes = []
+
+        if os.path.exists(folder) is False:
+            os.makedirs(folder)
+
         for i in range(len(best_traj.nodes)):
             k = best_traj.nodes[i]
-            print("node: ", k)
+            # print("node: ", k)
+            # print(self.features[i][k][0:10])
+            planes.append(self.features[i][k][6:10])
             if i == len(best_traj.nodes) - 1:
+                planes.append(np.array([0, 1, 0, 0]))
                 with open(os.path.join(folder, 'result-'+str(i+1)+'.off'), 'w') as f:
                     f.write(export_polys[i][k][0])
 
             with open(os.path.join(folder, 'result-'+str(i)+'.off'), 'w') as f:
                 f.write(export_polys[i][k][1])
         
-        print(len(export_polys))
-
-        if os.path.exists(folder) is False:
-            os.makedirs(folder)
+        export_config_xml(os.path.join(folder, "result.xml"), planes)

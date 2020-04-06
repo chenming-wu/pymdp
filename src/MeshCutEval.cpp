@@ -94,9 +94,6 @@ bool MeshCutEval::cut_with_plane(const Polyhedron& poly_, const Plane& plane, Ma
             // new position
             Q = p1 + ((d0 / (d0 - d1)) * (p2 - p1));
 
-            // A too low cutting is not allowed
-            if (Q.y() < allowed_y) return false;
-
             mapEdgePoint[h] = Point3(Q.x(), Q.y(), Q.z());
             mapEdgePoint[h->opposite()] = mapEdgePoint[h];
             ++n_cut;

@@ -7,21 +7,45 @@ Multi-directional 3D printing by robotic or automation systems has changed the w
 ----
 Dependency
 ----
-CGAL: https://www.cgal.org
 
-Boost: https://www.boost.org
+`Eigen <http://eigen.tuxfamily.org/>`_  `CGAL <https://www.cgal.org/>`_ `PyBind11 <http://github.com/pybind/pybind11/>`_
 
-PyBind11: http://github.com/pybind/pybind11/
 
 -------
 Install
 -------
 
-Make sure you have installed CMake (>=3.16), simply use the following command to install the library.
+We use CMake (>=3.16) and vcpkg to facilate the compilation process. You can download and install CMake from their official website, and install vcpkg by
 
 .. code-block:: bash
 
-    python -m pip install pymdp
+    git clone https://github.com/Microsoft/vcpkg.git
+    cd vcpkg
+    ./bootstrap-vcpkg.sh
+    ./vcpkg integrate install
+
+Next, you will need to install CGAL dependency:
+
+.. code-block:: bash
+
+    vcpkg install eigen
+    vcpkg install cgal
+    
+
+Note: if you are running on a Windows system, vcpkg will install 32-bit package by default. In this case, you might need to use the following command
+
+.. code-block:: bash
+
+    vcpkg install eigen:x64-windows
+    vcpkg install cgal:x64-windows
+
+Then you can easily install the library by using the following command.
+
+.. code-block:: bash
+
+    pip install . --install-option="--vcpkg=YOUR_VCPKG_FOLDER"
+
+Please change "YOUR_VCPKG_FOLDER" to the folder where VCPKG is installed.
 
 -------
 Demo

@@ -14,7 +14,12 @@ ENDIF ()
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE TRUE)
 
-find_package(CGAL REQUIRED QUIET COMPONENTS Core GMP MPFI)
+find_package(CGAL CONFIG REQUIRED)
+# Don't let CGAL override flags
+set(CGAL_DONT_OVERRIDE_CMAKE_FLAGS
+    TRUE
+    CACHE BOOL "Force CGAL to maintain CMAKE flags")
+set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE TRUE)
 
 include(FetchContent)
 
@@ -35,7 +40,7 @@ if (NOT pybind11_sources_POPULATED)
     )
 endif ()
 
-find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+ find_package(Eigen3 CONFIG REQUIRED)
 
 # include helper file
 include(${CGAL_USE_FILE})
