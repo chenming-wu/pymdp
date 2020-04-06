@@ -44,7 +44,7 @@ py::tuple RoboFDM::step(py::array_t<double>& input) {
     pl = MeshCutEval::convert_abg_to_plane(ptr[0], ptr[1], ptr[2], bsphere);
   else
     pl = Plane(ptr[0], ptr[1], ptr[2], ptr[3]);
-
+  
   auto res = MeshCutEval::apply_plane_cut(poly, pl, bbox_, plt);
 
   data[0] = res.first;
@@ -249,7 +249,7 @@ py::array_t<double> RoboFDM::render() {
 
 std::string RoboFDM::get_poly() {
   std::stringstream ss;
-  ss << poly;
+  ss << std::setprecision(8) << poly;
   return ss.str();
 }
 
@@ -277,7 +277,10 @@ bool RoboFDM::set_poly(const std::string& str) {
         }
       }
     }
-    MeshCutEval::initialize_supports(poly);
+    
+    auto initResults =  MeshCutEval::initialize_supports(poly);
+    //std::cout << initResults[0] << " " << initResults[1] << " " << initResults[2] << std::endl;
+
     return true;
   } else {
     return false;
