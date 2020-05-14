@@ -76,7 +76,7 @@ bool sample(const std::string& input, const std::string& outputFile) {
   float radius = 1.0, center[3];
   if (FLAGS_scale) {
     bounding_sphere(radius, center, V.data(), V.size() / 3);
-    float scale = FLAGS_scale / (2 * radius);
+    float scale = 1.0 / (2 * radius);
     for (auto& v : V) {
       v *= scale;
     }
@@ -85,14 +85,6 @@ bool sample(const std::string& input, const std::string& outputFile) {
   // sample points
   vector<float> pts, normals;
   sample_points(pts, normals, V, F, 1.0);
-
-  // scale points
-  if (FLAGS_scale != 1.0f) {
-    float scale = 2 * radius / FLAGS_scale;
-    for (auto& p : pts) {
-      p *= scale;
-    }
-  }
 
   // save points
   Points point_cloud;

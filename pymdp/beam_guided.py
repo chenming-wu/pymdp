@@ -3,8 +3,8 @@ import numpy as np
 import copy
 import os
 import sys
-from .utility import run_cut_process, write_mesh
-from .trajectory import TrajStation, Trajectory
+from utility import run_cut_process, write_mesh
+from trajectory import TrajStation, Trajectory
 
 from sys import platform
 if platform == "linux" or platform == "linux2":
@@ -195,9 +195,9 @@ class BGS:
                 break
 
         self.export_polys.append(cur_export_polys)
-
+        print('has_import ', has_impr)
         # while loop here
-        if has_impr is False:
+        if has_impr == False:
             return False
 
         for tn in cur_traj_node:
@@ -229,6 +229,9 @@ class BGS:
 
         print(os.path.basename(self.filename)[:-4])
         self.b_trajs.prepare_data(os.path.join(
+            self.output_folder, os.path.basename(self.filename)[:-4]))
+
+        self.b_trajs.prepare_data_edge(os.path.join(
             self.output_folder, os.path.basename(self.filename)[:-4]))
 
         if self.export:

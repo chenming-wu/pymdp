@@ -55,6 +55,13 @@ class TrajStation:
     def get_trajs_previous(self):
         return self.trajs[self.level -1]
     
+    def get_feats_previous(self):
+        print("level = ", self.level)
+        if self.level == 1:
+            return None
+        else:
+            return self.features[-1]
+
     def add_node(self, _from, _to, _val):
         trajs = self.get_trajs_previous()
         new_traj = copy.deepcopy(trajs[_from])
@@ -78,6 +85,27 @@ class TrajStation:
         for i in range(len(trajs)):
             print('Traj ', i, ' : ')
             trajs[i].display()
+
+    def prepare_data_edge(self, folder):
+        all_trajs = [x for sublist in self.trajs for x in sublist]
+        all_trajs.sort(key=lambda x : x.value, reverse=True)
+        adjacent_matrices = [[] for i in range(len(self.features))]
+        adjacent_dicts = [{} for i in range(len(self.features))]
+
+        for traj in all_trajs:
+            for i in range(len(traj.nodes)):
+                prev_id = traj.nodes[i-1] if i > 0 else -1
+                cur_id = traj.nodes[i]
+                is_in = (prev_id, cur_id) in adjacent_dicts[i]
+                if is_in == False:
+                    prev_feat = self.features[i-1][traj.nodes[i-1]][0:6] if i > 0 else np.array([0, 0, 0, 0, 0, 0])
+                    cur_feat = self.features[i][traj.nodes[i]][0:6]
+                    cat_feat = np.concatenate((prev_feat, cur_feat), axis=0)
+                    adjacent_matrices[i].append(cat_feat)
+                    adjacent_dicts[i][(prev_id, cur_id)] = 1
+        
+        for i in range(len(self.features)):
+            np.save(folder +'/adjm-'+str(i)+'.npy', adjacent_matrices[i])
 
     def prepare_data(self, folder):
         # first, sort all trajectories
