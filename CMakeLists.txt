@@ -59,22 +59,14 @@ endif ()
 
 # create python module
 
+include_directories("src/" "src/OCNN")
+
+FILE(GLOB SOURCES "src/*" "src/OCNN/*")
+
+
 add_library(RoboFDM
     MODULE
-    src/GeometryTools.cpp
-    src/GeometryTools.h
-    src/FillHole.cpp
-    src/FillHole.h
-    src/FillHoleCDT.cpp
-    src/FillHoleCDT.h
-    src/PlaneCut.cpp
-    src/PlaneCut.h
-    src/MeshCutEval.cpp
-    src/MeshCutEval.h
-    src/MeshSupEval.cpp
-    src/RoboFDM.cpp
-    src/RoboFDM.h
-    src/RoboFDMUtils.cpp
+    ${SOURCES}
 )
 
 

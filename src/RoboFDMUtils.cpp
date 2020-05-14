@@ -3,25 +3,26 @@
 namespace py = pybind11;
 
 PYBIND11_MODULE(RoboFDM, m) {
-	py::class_<RoboFDM>(m, "init")
-		.def(py::init())
-		.def("load_tet_mesh", &RoboFDM::load_tet_mesh)
-		.def("load_tri_mesh", &RoboFDM::load_tri_mesh)
-		.def("get_poly", &RoboFDM::get_poly)
-		.def("set_poly", &RoboFDM::set_poly)
-		.def("plane_cut", &RoboFDM::plane_cut)
-		.def("reset", &RoboFDM::reset)
-		.def("step", &RoboFDM::step)
-		.def("render", &RoboFDM::render)
-		.def("n_features", &RoboFDM::n_features)
-		.def("planes", &RoboFDM::planes)
-		.def("get_inrev_risky_area", &RoboFDM::get_inrev_risky_area)
-		.def("get_risky_area", &RoboFDM::get_risky_area)
-		.def("get_area", &RoboFDM::get_area)
-		.def("get_volume", &RoboFDM::get_volume)
-		.def("get_far_risky_area", &RoboFDM::get_far_risky_area)
-		.def("plane_cut_both", &RoboFDM::plane_cut_both)
-		.def("get_positive_poly", &RoboFDM::get_positive_poly);
+  py::class_<RoboFDM>(m, "init")
+      .def(py::init())
+      .def("load_tet_mesh", &RoboFDM::load_tet_mesh)
+      .def("load_tri_mesh", &RoboFDM::load_tri_mesh)
+      .def("get_poly", &RoboFDM::get_poly)
+      .def("set_poly", &RoboFDM::set_poly)
+      .def("plane_cut", &RoboFDM::plane_cut)
+      .def("reset", &RoboFDM::reset)
+      .def("step", &RoboFDM::step)
+      .def("render", &RoboFDM::render)
+      .def("n_features", &RoboFDM::n_features)
+      .def("planes", &RoboFDM::planes)
+      .def("get_inrev_risky_area", &RoboFDM::get_inrev_risky_area)
+      .def("get_risky_area", &RoboFDM::get_risky_area)
+      .def("get_area", &RoboFDM::get_area)
+      .def("get_volume", &RoboFDM::get_volume)
+      .def("get_far_risky_area", &RoboFDM::get_far_risky_area)
+      .def("plane_cut_both", &RoboFDM::plane_cut_both)
+      .def("get_positive_poly", &RoboFDM::get_positive_poly)
+      .def("sample", &RoboFDM::sample_mesh);
 }
 
 bool RoboFDM::mesh_to_polyhedron(const Eigen::MatrixXd& V, const Eigen::MatrixXi& F, Polyhedron& poly) {

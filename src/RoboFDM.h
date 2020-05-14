@@ -4,6 +4,7 @@
 #include <pybind11/numpy.h>
 #include <omp.h>
 #include "MeshCutEval.h"
+#include <mesh_sampler.h>
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -57,6 +58,10 @@ public:
     double get_volume() const { return initVolume; };
 
     double get_area() const { return initArea; };
+
+    bool sample_mesh(const std::string& input, const std::string& outputFile) {
+      return MeshSampler::sample(input, outputFile);
+    };
 
 private:
     static void load_candidate_dirs(std::vector<Vector3>& candidate_dirs_);
