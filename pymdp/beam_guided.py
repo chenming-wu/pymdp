@@ -202,12 +202,13 @@ class BGS:
 
         for tn in cur_traj_node:
             (pid, pl, pr) = tn
-            self.b_trajs.add_node(pid, pl, pr)
-
+            self.b_trajs.add_node(pid, pl, pr) # TODO: sample poly here...
+            
         # print(cur_r)
         feat_valid = len(traj_feats)
 
         self.b_trajs.add_feature(traj_feats, feat_valid)
+        self.b_trajs.add_poly_beam(self.b_polys)
 
         self.b_polys = cur_polys
         # print(self.b_rew)

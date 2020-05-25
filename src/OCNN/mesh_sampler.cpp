@@ -5,7 +5,7 @@ namespace MeshSampler {
 
   void sample_points(vector<float>& pts, vector<float>& normals, const vector<float>& V, const vector<int>& F,
                    float area_unit) {
-  std::default_random_engine generator(static_cast<unsigned int>(time(nullptr)));
+  std::default_random_engine generator(static_cast<unsigned int>(4));
   std::uniform_real_distribution<float> distribution(0.0, 1.0);
   vector<float> face_normal, face_center, face_area;
   compute_face_normal(face_normal, face_area, V, F);
@@ -64,7 +64,7 @@ namespace MeshSampler {
 }
 
 bool sample(const std::string& input, const std::string& outputFile) {
-  auto FLAGS_scale = true;
+  auto FLAGS_scale = false;
   vector<float> V;
   vector<int> F;
 
@@ -92,11 +92,11 @@ bool sample(const std::string& input, const std::string& outputFile) {
   point_cloud.write_points(outputFile + ".points");
     
   
-  //std::ofstream oFile("o.xyz");
-  //for (int j = 0; j < pts.size();) {
-  //  oFile << pts[j] << " " << pts[j + 1] << " " << pts[j + 2] << std::endl;
-  //  j += 3;
-  //}
-  //oFile.close();
+  std::ofstream oFile("o.xyz");
+  for (int j = 0; j < pts.size();) {
+    oFile << pts[j] << " " << pts[j + 1] << " " << pts[j + 2] << std::endl;
+    j += 3;
+  }
+  oFile.close();
 }
 }; // namespace MeshSampler

@@ -3,6 +3,7 @@ import numpy as np
 import os
 from xml.etree.ElementTree import ElementTree
 from xml.etree.ElementTree import Element, SubElement
+from utility import sample_poly
 
 def export_config_xml(file, planes):
     root_node = Element('root')
@@ -43,6 +44,7 @@ class TrajStation:
         self.features = []
         self.feat_valid = []
         self.level = 0
+        self.polys = []
     
     def get_trajs_by_level(self, level):
         if len(self.trajs) == level:
@@ -68,17 +70,21 @@ class TrajStation:
         new_traj.update_node(_to, _val)
         self.trajs[-1].append(new_traj)
 
+    def add_feature(self, feat, feat_valid):
+        self.features.append(feat)
+        self.feat_valid.append(feat_valid)
+
+    def add_poly_beam(self, polys):
+        self.polys.append(copy.deepcopy(polys))
+
     def move_to_next_level(self):
         self.level += 1
         if len(self.trajs) <= self.level:
             self.trajs.append([])
     
     def move_to_previous_level(self):
-        self.level -=1
+        self.level -= 1
 
-    def add_feature(self, feat, feat_valid):
-        self.features.append(feat)
-        self.feat_valid.append(feat_valid)
 
     def display(self):
         trajs = self.get_trajs_current()
@@ -92,17 +98,25 @@ class TrajStation:
         adjacent_matrices = [[] for i in range(len(self.features))]
         adjacent_dicts = [{} for i in range(len(self.features))]
 
+        # a plane + a points file
         for traj in all_trajs:
             for i in range(len(traj.nodes)):
                 prev_id = traj.nodes[i-1] if i > 0 else -1
                 cur_id = traj.nodes[i]
                 is_in = (prev_id, cur_id) in adjacent_dicts[i]
                 if is_in == False:
+                    ''' #concatenated feature
                     prev_feat = self.features[i-1][traj.nodes[i-1]][0:6] if i > 0 else np.array([0, 0, 0, 0, 0, 0])
                     cur_feat = self.features[i][traj.nodes[i]][0:6]
                     cat_feat = np.concatenate((prev_feat, cur_feat), axis=0)
+                    '''
+                    cat_feat = self.features[i][traj.nodes[i]][6:10]
                     adjacent_matrices[i].append(cat_feat)
                     adjacent_dicts[i][(prev_id, cur_id)] = 1
+                    sample_poly(self.polys[i][prev_id] if prev_id != -1 else self.polys[i][0], \
+                             os.path.join(folder, str(i)+'-'+str(cur_id)))
+                    # self.polys[i-1][traj.nodes[i-1]]
+                    # self.polys[i][traj.nodes[i]]
         
         for i in range(len(self.features)):
             np.save(folder +'/adjm-'+str(i)+'.npy', adjacent_matrices[i])

@@ -52,3 +52,7 @@ def run_cut_process(poly, plane, export=False):
 def write_mesh(mesh_str, filename):
     with open(filename, "w") as f:
         f.write(mesh_str)
+
+def sample_poly(poly, outfile):
+    ra = RoboFDM.init()
+    result = ra.sample_mesh(poly, outfile)
