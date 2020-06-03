@@ -1,0 +1,2 @@
+model_checkpoint_path: "after-epoch-73"
+all_model_checkpoint_paths: "after-epoch-73"

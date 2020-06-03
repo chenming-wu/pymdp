@@ -75,7 +75,7 @@ class BGS:
     def select_from_features(self, features, k=5):
         sort_idx = self.rank_net.rank_features(features)
         res = [sort_idx[i] for i in range(k)]
-        return res
+        return res 
 
     def feedforward_search(self):
         all_r = None
@@ -178,8 +178,14 @@ class BGS:
         select_k = min(len(cur_sel), self.k)
         print(select_k)
         if len(cur_sel) > 1:
+            prev_feats = self.b_trajs.get_feats_previous()
             # rank and select here
-            temp_features = [all_r[i, 0:6] for (i, _) in cur_sel]
+            if prev_feats == None:
+                temp_features = [np.concatenate((np.array([0, 0, 0, 0, 0, 0]), all_r[i, 0:6]), axis=0) for (i, _) in cur_sel]
+            else:
+                prev_feats = np.array(prev_feats)
+                temp_features = [np.concatenate((prev_feats[p, 0:6], all_r[i, 0:6]), axis=0) for (i, p) in cur_sel]
+
             sel_idx = self.select_from_features(temp_features, select_k)
             temp_features = np.array(temp_features)
             # max_ele = np.argmax(temp_features[:, 1])
@@ -231,7 +237,7 @@ class BGS:
         self.export_polys.append(cur_export_polys)
 
         # while loop here
-        if has_impr is False:
+        if has_impr == False:
             return False
 
         for tn in cur_traj_node:

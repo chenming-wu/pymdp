@@ -1,0 +1,6 @@
+model_checkpoint_path: "after-epoch-100"
+all_model_checkpoint_paths: "after-epoch-96"
+all_model_checkpoint_paths: "after-epoch-97"
+all_model_checkpoint_paths: "after-epoch-98"
+all_model_checkpoint_paths: "after-epoch-99"
+all_model_checkpoint_paths: "after-epoch-100"

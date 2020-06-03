@@ -1,0 +1,27 @@
+{
+    "learning_rate": 1e-4,
+    "batch_size": 1,
+    "num_epochs": 1000,
+    "buffer_size": 1,
+    "save_summary_steps": 100,
+    "early_stoping_epochs": 200,
+    "gradient_clip_value": 5,
+    "mlp_sizes": [100, 100],
+    "residual_mlp_sizes": [100, 50],
+    "pooling": "MP",
+    "rnn": "C1",
+    "num_learners": 4,
+    "top_ks": [1,2,3,4,5],
+    "save_predictions": true,
+    "use_residual": false,
+
+    "training_keep_prob": 1.0,
+    "top_k": 10,
+    "pre_training": 0,
+    "use_regularization": false,
+    "dropout_rate": 0.3,
+    "decay_size": 126,
+    "decay_rate": 0.9, 
+    "mask": "diag_mask",
+    "exploration": 0.7        
+}

@@ -62,6 +62,10 @@ Demo
         proc.start_search()
 
 
+We recently proposed a learning-based method for improving the original search algorithm, which is based on learning-to-rank techniques. Source codes are avialable in the "learning_based.py" file.
+
+
+
 -------
 Credits
 -------
@@ -76,6 +80,18 @@ We really appreciate if your scientific publications resulting from the projects
     year={2019},
     publisher={IEEE}
     }
+
+.. code-block:: bibtex
+
+    @article{wu2020learning,
+    title={Learning to Accelerate Decomposition for Multi-Directional 3D Printing},
+    author={Wu, Chenming and Liu, Yong-Jin and Wang, Charlie CL},
+    journal={arXiv preprint arXiv:2004.03450},
+    year={2020}
+    }
+
+
+In our learning-to-accelerate work, we use the official `urank <https://github.com/XiaofengZhu/uRank_uMart>`_  impelementation provided by Xiaofeng Zhu. Please consider cite their papers if you also found it helpful.
 
 -------
 License
