@@ -28,7 +28,7 @@ Next, you will need to install CGAL dependency:
 
 .. code-block:: bash
 
-    vcpkg install eigen
+    vcpkg install eigen3
     vcpkg install cgal
     
 
@@ -36,7 +36,7 @@ Note: if you are running on a Windows system, vcpkg will install 32-bit package 
 
 .. code-block:: bash
 
-    vcpkg install eigen:x64-windows
+    vcpkg install eigen3:x64-windows
     vcpkg install cgal:x64-windows
 
 Then you can easily install the library by using the following command.
