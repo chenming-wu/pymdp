@@ -72,6 +72,17 @@ Credits
 We really appreciate if your scientific publications resulting from the projects that make use of PyMDP would cite our work.
 
 .. code-block:: bibtex
+    
+    @inproceedings{wu2017robofdm,
+      title={RoboFDM: A robotic system for support-free fabrication using FDM},
+      author={Wu, Chenming and Dai, Chengkai and Fang, Guoxin and Liu, Yong-Jin and Wang, Charlie CL},
+      booktitle={2017 IEEE International Conference on Robotics and Automation (ICRA)},
+      pages={1175--1180},
+      year={2017},
+      organization={IEEE}
+    }
+
+.. code-block:: bibtex
 
     @article{wu2019general,
     title={General Support-Effective Decomposition for Multi-Directional 3-D Printing},
@@ -84,10 +95,14 @@ We really appreciate if your scientific publications resulting from the projects
 .. code-block:: bibtex
 
     @article{wu2020learning,
-    title={Learning to Accelerate Decomposition for Multi-Directional 3D Printing},
-    author={Wu, Chenming and Liu, Yong-Jin and Wang, Charlie CL},
-    journal={arXiv preprint arXiv:2004.03450},
-    year={2020}
+      title={Learning to accelerate decomposition for multi-directional 3D printing},
+      author={Wu, Chenming and Liu, Yong-Jin and Wang, Charlie CL},
+      journal={IEEE Robotics and Automation Letters},
+      volume={5},
+      number={4},
+      pages={5897--5904},
+      year={2020},
+      publisher={IEEE}
     }
 
 
