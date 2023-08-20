@@ -2,7 +2,9 @@
 PyMDP: A decomposition tool for multi-direction 3D printing  
 #################################
 
-Multi-directional 3D printing by robotic or automation systems has changed the way of traditional layer-wise printing. As a strong complementary of additive manufacturing, multi-directional printing has the capability of decreasing or eliminating the need for support structures.
+.. image:: /img/figRepo.jpg
+
+Multi-directional 3D printing by robotic arms or multi-axis systems is a new way of manufacturing. As a strong complementary of layer-wise additive manufacturing, multi-directional printing has the capability of decreasing or eliminating the need for support structures.
 
 ----
 Dependency
@@ -69,7 +71,7 @@ We recently proposed a learning-based method for improving the original search a
 -------
 Credits
 -------
-We really appreciate if your scientific publications resulting from the projects that make use of PyMDP would cite our work.
+We really appreciate if your scientific publications that make use of PyMDP would cite our work.
 
 .. code-block:: bibtex
     
@@ -106,7 +108,7 @@ We really appreciate if your scientific publications resulting from the projects
     }
 
 
-In our learning-to-accelerate work, we use the official `urank <https://github.com/XiaofengZhu/uRank_uMart>`_  impelementation provided by Xiaofeng Zhu. Please consider cite their papers if you also found it helpful.
+In our learning-to-accelerate work, we use `urank <https://github.com/XiaofengZhu/uRank_uMart>`_  impelementation provided by Xiaofeng Zhu. Please consider cite their work if you also found it helpful.
 
 -------
 License
