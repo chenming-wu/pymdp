@@ -9,7 +9,7 @@ Multi-directional 3D printing by robotic arms or multi-axis systems is a new way
 ------
 Notice
 ------
-This library is **no longer actively maintained**. If you come across any complications during the compilation process, we suggest exploring the option of using a previous version of VCPKG from the year 2022. This approach has proven to be effective for numerous users who encountered similar issues and reached out to us via email.
+This library is **no longer actively maintained**. If you come across any complications during the compilation process, we suggest exploring the option of using a previous version of VCPKG from the year 2020. This approach has proven to be effective for numerous users who encountered similar issues and reached out to us via email.
 
 ----------
 Dependency
