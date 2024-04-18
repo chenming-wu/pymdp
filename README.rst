@@ -1,14 +1,19 @@
-#################################
+===========================================================
 PyMDP: A decomposition tool for multi-direction 3D printing  
-#################################
+===========================================================
 
 .. image:: /img/figRepo.jpg
 
 Multi-directional 3D printing by robotic arms or multi-axis systems is a new way of manufacturing. As a strong complementary of layer-wise additive manufacturing, multi-directional printing has the capability of decreasing or eliminating the need for support structures.
 
-----
+------
+Notice
+------
+This library is **no longer actively maintained**. If you come across any complications during the compilation process, we suggest exploring the option of using a previous version of VCPKG from the year 2022. This approach has proven to be effective for numerous users who encountered similar issues and reached out to us via email.
+
+----------
 Dependency
-----
+----------
 
 `Eigen <http://eigen.tuxfamily.org/>`_  `CGAL <https://www.cgal.org/>`_ `PyBind11 <http://github.com/pybind/pybind11/>`_
 
@@ -34,7 +39,7 @@ Next, you will need to install CGAL dependency:
     vcpkg install cgal
     
 
-Note: if you are running on a Windows system, vcpkg will install 32-bit package by default. In this case, you might need to use the following command
+Note: If you are using a Windows system, please be aware that vcpkg will install the 32-bit package as the default option. If you encounter this situation, you may need to utilize the following command.
 
 .. code-block:: bash
 
@@ -64,14 +69,14 @@ Demo
         proc.start_search()
 
 
-We recently proposed a learning-based method for improving the original search algorithm, which is based on learning-to-rank techniques. Source codes are avialable in the "learning_based.py" file.
+We have recently introduced a learning-based approach to enhance the original search algorithm, utilizing learning-to-rank techniques. The source codes for this method can be found in the "learning_based.py" file, which is available for access.
 
 
 
 -------
 Credits
 -------
-We really appreciate if your scientific publications that make use of PyMDP would cite our work.
+We kindly request that any scientific publications utilizing PyMDP cite our work, as we greatly appreciate your support.
 
 .. code-block:: bibtex
     
@@ -113,5 +118,4 @@ In our learning-to-accelerate work, we use `urank <https://github.com/XiaofengZh
 -------
 License
 -------
-This library is ONLY for research purposes at your university (research institution). 
-In no event shall the author be liable to any party for direct, indirect, special, incidental, or consequential damage arising out of the use of this program.
+This library is intended solely for research purposes within your university or research institution. The author shall not be held liable to any party for any direct, indirect, special, incidental, or consequential damages resulting from the utilization of this program.
