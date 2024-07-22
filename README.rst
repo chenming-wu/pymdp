@@ -115,7 +115,3 @@ We kindly request that any scientific publications utilizing PyMDP cite our work
 
 In our learning-to-accelerate work, we use `urank <https://github.com/XiaofengZhu/uRank_uMart>`_  impelementation provided by Xiaofeng Zhu. Please consider cite their work if you also found it helpful.
 
--------
-License
--------
-This library is intended solely for research purposes within your university or research institution. The author shall not be held liable to any party for any direct, indirect, special, incidental, or consequential damages resulting from the utilization of this program.
