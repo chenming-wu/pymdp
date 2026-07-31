@@ -143,7 +143,7 @@ Point3* Geotools::get_int_point(Point3& p1, Point3& p2, Point3& p3, Point3& p4) 
 	const Segment3 s2(p3, p4);
 	CGAL::cpp11::result_of<K::Intersect_3(Segment3, Segment3)>::type resi = CGAL::intersection(s1, s2);
 	if (resi) {
-		if (Point3* l = boost::get<Point3>(&*resi)) {
+		if (Point3* l = std::get_if<Point3>(&*resi)) {
 			return l;
 		}
 	}
