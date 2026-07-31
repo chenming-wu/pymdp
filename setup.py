@@ -6,42 +6,20 @@ import subprocess
 
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
-from setuptools.command.install import install
+# from setuptools.command.install import install
 from distutils.version import LooseVersion
 
-VCPKG = None
-
-try:
-    # for pip >= 10
-    from pip._internal.req import parse_requirements
-except ImportError:
-    # for pip <= 9.0.3
-    from pip.req import parse_requirements
+# try:
+#     # for pip >= 10
+#     from pip._internal.req import parse_requirements
+# except ImportError:
+#     # for pip <= 9.0.3
+#     from pip.req import parse_requirements
 
 
-
-class InstallCommand(install):
-    user_options = install.user_options + [
-        ('vcpkg=', None, "<Directory to your vcpkg>"), # a 'flag' option
-        #('someval=', None, None) # an option that takes a value
-    ]
-
-    def initialize_options(self):
-        install.initialize_options(self)
-        self.vcpkg = None
-        #self.someval = None
-
-    def finalize_options(self):
-        install.finalize_options(self)
-
-    def run(self):
-        global VCPKG
-        VCPKG = self.vcpkg # will be 1 or None
-        install.run(self)
-
-def load_requirements(fname):
-    reqs = parse_requirements(fname, session="test")
-    return [str(ir.req) for ir in reqs]
+# def load_requirements(fname):
+#     reqs = parse_requirements(fname, session="test")
+#     return [str(ir.requirement) for ir in reqs]
 
 
 class CMakeExtension(Extension):
@@ -67,7 +45,6 @@ class CMakeBuild(build_ext):
             self.build_extension(ext)
 
     def build_extension(self, ext):
-        global VCPKG
         extdir = os.path.abspath(os.path.dirname(
             self.get_ext_fullpath(ext.name)))
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
@@ -79,10 +56,11 @@ class CMakeBuild(build_ext):
         # Pile all .so in one place and use $ORIGIN as RPATH
         cmake_args += ["-DCMAKE_BUILD_WITH_INSTALL_RPATH=TRUE"]
         cmake_args += ["-DCMAKE_INSTALL_RPATH={}".format("$ORIGIN")]
-        
-        if VCPKG != None:
+
+        vcpkg_root = os.environ.get("VCPKG_ROOT")
+        if vcpkg_root:
             vcpkg_cmake = os.path.join(
-                str(VCPKG), "scripts", "buildsystems", "vcpkg.cmake")
+                vcpkg_root, "scripts", "buildsystems", "vcpkg.cmake")
             cmake_args += ["-DCMAKE_TOOLCHAIN_FILE="+vcpkg_cmake]
                 
         if platform.system() == "Windows":
@@ -118,8 +96,8 @@ setup(
     long_description=open("README.rst").read(),
     ext_modules=[CMakeExtension('RoboFDM')],
     packages=find_packages(),
-    cmdclass=dict(install=InstallCommand, build_ext=CMakeBuild),
+    cmdclass=dict(build_ext=CMakeBuild),
     url="https://github.com/chenming-wu/pymdp",
     zip_safe=False,
-    install_requires=load_requirements("requirements.txt"),
+    # install_requires=load_requirements("requirements.txt"),
 )
