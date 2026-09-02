@@ -9,7 +9,11 @@ Multi-directional 3D printing by robotic arms or multi-axis systems is a new way
 ------
 Notice
 ------
-This library is **no longer actively maintained**. If you come across any complications during the compilation process, we suggest exploring the option of using a previous version of VCPKG from the year 2020. This approach has proven to be effective for numerous users who encountered similar issues and reached out to us via email.
+This library is **no longer actively maintained** by the original author.
+
+I'm not planning to maintain it either, but I wanted to install it (in Windows) and use more recent versions of the dependencies (CGAL, Eigen, and PyBind11).
+
+I tried to change as little as possible the source code and updated the python setup process.
 
 ----------
 Dependency
@@ -22,7 +26,7 @@ Dependency
 Install
 -------
 
-We use CMake (>=3.16) and vcpkg to facilate the compilation process. You can download and install CMake from their official website, and install vcpkg by
+I used CMake 4.4.0 and VCPKG to facilate the compilation process. You can download and install CMake from their official website, and install VCPKG by
 
 .. code-block:: bash
 
@@ -30,6 +34,8 @@ We use CMake (>=3.16) and vcpkg to facilate the compilation process. You can dow
     cd vcpkg
     ./bootstrap-vcpkg.sh
     ./vcpkg integrate install
+
+When installing VCPKG, make sure you define the environmental variable **VCPKG_ROOT** as the root directory of VCPKG.
 
 Next, you will need to install CGAL dependency:
 
@@ -39,7 +45,7 @@ Next, you will need to install CGAL dependency:
     vcpkg install cgal
     
 
-Note: If you are using a Windows system, please be aware that vcpkg will install the 32-bit package as the default option. If you encounter this situation, you may need to utilize the following command.
+Note: If you are using a Windows system, please be aware that VCPKG will install the 32-bit package as the default option. If you encounter this situation, you may need to utilize the following command.
 
 .. code-block:: bash
 
@@ -50,9 +56,7 @@ Then you can easily install the library by using the following command.
 
 .. code-block:: bash
 
-    pip install . --install-option="--vcpkg=YOUR_VCPKG_FOLDER"
-
-Please change "YOUR_VCPKG_FOLDER" to the folder where VCPKG is installed.
+    pip install .
 
 -------
 Demo
@@ -69,14 +73,14 @@ Demo
         proc.start_search()
 
 
-We have recently introduced a learning-based approach to enhance the original search algorithm, utilizing learning-to-rank techniques. The source codes for this method can be found in the "learning_based.py" file, which is available for access.
+The original authors introduced a learning-based approach to enhance the original search algorithm, utilizing learning-to-rank techniques. The source codes for this method can be found in the "learning_based.py" file, which is available for access.
 
 
 
 -------
 Credits
 -------
-We kindly request that any scientific publications utilizing PyMDP cite our work, as we greatly appreciate your support.
+The original authors request that any scientific publications utilizing PyMDP cite our work, as we greatly appreciate your support.
 
 .. code-block:: bibtex
     
@@ -113,5 +117,5 @@ We kindly request that any scientific publications utilizing PyMDP cite our work
     }
 
 
-In our learning-to-accelerate work, we use `urank <https://github.com/XiaofengZhu/uRank_uMart>`_  impelementation provided by Xiaofeng Zhu. Please consider cite their work if you also found it helpful.
+In the original author's learning-to-accelerate work, we use `urank <https://github.com/XiaofengZhu/uRank_uMart>`_  impelementation provided by Xiaofeng Zhu. Please consider cite their work if you also found it helpful.
 

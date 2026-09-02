@@ -1,63 +1,69 @@
-
 cmake_minimum_required(VERSION 3.16)
+
+if(DEFINED ENV{VCPKG_ROOT})
+    set(
+        CMAKE_TOOLCHAIN_FILE
+        "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        CACHE STRING "Vcpkg toolchain file"
+    )
+endif()
 
 project(RoboFDM_py)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-IF (WIN32)
+if(WIN32)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
-    set(MSVC_RUNTIME "dynamic")
-ENDIF ()
+endif()
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake
+)
+
 set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE TRUE)
+
+# ---------------------------------------------------------------------------
+# Dependencies
+# ---------------------------------------------------------------------------
 
 find_package(CGAL CONFIG REQUIRED)
-# Don't let CGAL override flags
-set(CGAL_DONT_OVERRIDE_CMAKE_FLAGS
+
+set(
+    CGAL_DONT_OVERRIDE_CMAKE_FLAGS
     TRUE
-    CACHE BOOL "Force CGAL to maintain CMAKE flags")
-set(CGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE TRUE)
+    CACHE BOOL "Force CGAL to maintain CMAKE flags"
+)
 
 include(FetchContent)
 
 FetchContent_Declare(
-        pybind11_sources
-        GIT_REPOSITORY https://github.com/pybind/pybind11.git
-        GIT_TAG v3.0
+    pybind11_sources
+    GIT_REPOSITORY https://github.com/pybind/pybind11.git
+    GIT_TAG v3.0
 )
 
 FetchContent_GetProperties(pybind11_sources)
 
-if (NOT pybind11_sources_POPULATED)
+if(NOT pybind11_sources_POPULATED)
     FetchContent_Populate(pybind11_sources)
 
     add_subdirectory(
-            ${pybind11_sources_SOURCE_DIR}
-            ${pybind11_sources_BINARY_DIR}
+        ${pybind11_sources_SOURCE_DIR}
+        ${pybind11_sources_BINARY_DIR}
     )
-endif ()
+endif()
 
- find_package(Eigen3 CONFIG REQUIRED)
-
-# Boost and its components
+find_package(Eigen3 CONFIG REQUIRED)
 find_package(Boost REQUIRED)
-
 find_package(OpenMP REQUIRED)
 
-if (OPENMP_FOUND)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-endif ()
+# ---------------------------------------------------------------------------
+# Python module
+# ---------------------------------------------------------------------------
 
-
-# create python module
-
-add_library(RoboFDM
-    MODULE
+pybind11_add_module(RoboFDM
     src/GeometryTools.cpp
     src/GeometryTools.h
     src/FillHole.cpp
@@ -74,25 +80,28 @@ add_library(RoboFDM
     src/RoboFDMUtils.cpp
 )
 
+target_link_libraries(
+    RoboFDM
+    PRIVATE
+    pybind11::module
+    Eigen3::Eigen
+    CGAL::CGAL
+)
 
-if (CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
-    if (CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL "7.0" OR
-            CMAKE_CXX_COMPILER_VERSION VERSION_GREATER "7.0")
-        target_link_libraries(RoboFDM PUBLIC
-                pybind11::module
-                Eigen3::Eigen PRIVATE ${OpenMP_libomp_LIBRARY})
-    endif()
-else()
-    target_link_libraries(RoboFDM
-            PUBLIC
-            pybind11::module
-            Eigen3::Eigen
-			CGAL::CGAL
-            )
+if(OPENMP_FOUND)
+    target_link_libraries(
+        RoboFDM
+        PRIVATE
+        OpenMP::OpenMP_CXX
+    )
 endif()
 
-set_target_properties(RoboFDM
-        PROPERTIES
-        PREFIX "${PYTHON_MODULE_PREFIX}"
-        SUFFIX "${PYTHON_MODULE_EXTENSION}"
-        )
+# ---------------------------------------------------------------------------
+# Installation
+# ---------------------------------------------------------------------------
+
+install(
+    TARGETS RoboFDM
+    LIBRARY DESTINATION .
+    RUNTIME DESTINATION .
+)
